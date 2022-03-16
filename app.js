@@ -29,7 +29,9 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
-app.use("/img", express.static("images"));
+app.use("/audiobooks", express.static("uploads/audiobooks"));
+app.use("/books", express.static("uploads/books"));
+app.use("/users", express.static("uploads/users"));
 
 // routes
 app.use("/", require("./routes/web-route"))
