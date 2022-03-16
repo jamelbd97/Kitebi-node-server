@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const AudioBookSchema = new mongoose.Schema(
+const AudiobookSchema = new mongoose.Schema(
     {
         title: { type: String },
         artist: { type: String },
@@ -11,4 +11,4 @@ const AudioBookSchema = new mongoose.Schema(
         timestamps: { currentTime: () => Date.now() },
     }
 );
-module.exports = mongoose.model("AudioBook", AudioBookSchema);
+module.exports = mongoose.model("Audiobook", AudiobookSchema);

@@ -36,6 +36,6 @@ app.use("/", require("./routes/web-route"))
 app.use("/user", require("./routes/user-route"))
 app.use("/auth", require("./routes/auth-route"))
 app.use("/book", require("./routes/book-route"))
-app.use("/audio-book", require("./routes/audio-book-route"))
+app.use("/audiobook", require("./routes/audiobook-route"))
 
 app.listen(port, () => console.log("Server up and running on port " + port))
