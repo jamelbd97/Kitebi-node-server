@@ -1,0 +1,15 @@
+{
+  "name": "app.kitebi.server",
+  "version": "1.0.0",
+  "description": "Kitebi server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Maher / Jamel",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
