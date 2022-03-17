@@ -5,8 +5,8 @@ const upload = require('../middlewares/storage-books');
 
 router.route("/one")
     .get(bookController.get)
-    .post(upload.single('cover'), bookController.add)
-    .put(upload.single('cover'), bookController.update)
+    .post(upload.fields([{ name: "cover", maxCount: 1, }, { name: "pdf", maxCount: 1, },]), bookController.add)
+    .put(upload.fields([{ name: "cover", maxCount: 1, }, { name: "pdf", maxCount: 1, },]), bookController.update)
     .delete(bookController.delete);
 
 router.route("/all").get(bookController.getAll).delete(bookController.deleteAll);

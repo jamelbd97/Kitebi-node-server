@@ -10,4 +10,6 @@ router.route("/one")
 
 router.route("/all").get(userController.getAll).delete(userController.deleteAll);
 
+router.post("/favorite", userController.toggleFavorite)
+
 module.exports = router

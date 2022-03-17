@@ -16,6 +16,8 @@ const UserSchema = new mongoose.Schema(
     },
     pictureId: { type: String },
     isVerified: { type: Boolean },
+    favoriteBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    favoriteAudiobooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Audiobook" }],
     role: {
       type: String,
       enum: {

@@ -44,7 +44,7 @@ exports.update = async (req, res) => {
     });
     return res.send({ message: "User updated successfully" });
   } else {
-    return res.send({ message: "User does not exist" });
+    return res.status(404).send({ message: "User does not exist" });
   }
 };
 
@@ -54,7 +54,7 @@ exports.delete = async (req, res) => {
     await user.remove();
     return res.send({ message: "Users" + user._id + " have been deleted" });
   } else {
-    return res.send({ message: "User does not exist" });
+    return res.status(404).send({ message: "User does not exist" });
   }
 };
 
@@ -63,3 +63,44 @@ exports.deleteAll = async (req, res) => {
   res.send({ message: "All users have been deleted" });
 };
 
+exports.toggleFavorite = async (req, res) => {
+  const { _id, itemId, isBook } = req.body;
+
+  let user = await User.findById(_id);
+
+  if (user) {
+    if (isBook) {
+      if (user.favoriteBooks.includes(itemId)) {
+        await user.update({
+          $push: {
+            favoriteBooks: itemId
+          }
+        });
+      } else {
+        await user.update({
+          $pull: {
+            favoriteBooks: itemId
+          }
+        });
+      }
+      return res.send({ message: "User favorite books updated successfully" });
+    } else {
+      if (user.favoriteAudiobooks.includes(itemId)) {
+        await user.update({
+          $push: {
+            favoriteAudiobooks: itemId
+          }
+        });
+      } else {
+        await user.update({
+          $pull: {
+            favoriteAudiobooks: itemId
+          }
+        });
+      }
+      return res.send({ message: "User favorite books updated successfully" });
+    }
+  } else {
+    return res.status(404).send({ message: "User does not exist" });
+  }
+};

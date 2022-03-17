@@ -1,4 +1,5 @@
 let Audiobook = require("../models/audiobook");
+const fs = require("fs");
 
 exports.get = async (req, res) => {
     res.send({ audiobook: await Audiobook.findById(req.body._id) });
@@ -9,10 +10,11 @@ exports.getAll = async (req, res) => {
 };
 
 exports.add = async (req, res) => {
-    const { title, artist } = req.body;
+    const { title, author, releaseDate } = req.body;
     let audiobook = await new Audiobook({
         title,
-        artist,
+        author,
+        releaseDate,
         coverId: req.files.cover[0].filename,
         audioId: req.files.audio[0].filename
     }).save();
@@ -20,34 +22,65 @@ exports.add = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const { _id, title, artist } = req.body;
+    const { _id, title, author, releaseDate } = req.body;
     let audiobook = await Audiobook.findById(_id);
     if (audiobook) {
         await audiobook.update({
             $set: {
                 title,
-                artist,
+                author,
+                releaseDate,
                 coverId: req.files.cover[0].filename,
                 audioId: req.files.audio[0].filename
             }
         });
         return res.send({ message: "Audiobook updated successfully" });
     } else {
-        return res.send({ message: "Audiobook does not exist" });
+        return res.status(404).send({ message: "Audiobook does not exist" });
     }
 };
 
+
 exports.delete = async (req, res) => {
-    let audiobook = await Audiobook.findById(req.body._id);
-    if (audiobook) {
-        await audiobook.remove();
-        return res.send({ message: "Audiobooks" + audiobook._id + " have been deleted" });
-    } else {
-        return res.send({ message: "Audiobook does not exist" });
-    }
+    await Audiobook.findById(req.body._id)
+        .then(function (audiobook) {
+
+            deleteFile("./uploads/audiobooks/" + audiobook.coverId)
+            deleteFile("./uploads/audiobooks/" + audiobook.pdfId)
+
+            audiobook.remove();
+
+            return res.status(201).send({ message: "Audiobook deleted" });
+        }).catch(function (error) {
+            console.log(error)
+            res.status(500).send();
+        });
 };
 
 exports.deleteAll = async (req, res) => {
-    await Audiobook.remove({});
-    res.send({ message: "All audiobooks have been deleted" });
+    Audiobook.find()
+        .then(function (audiobooks) {
+            audiobooks.forEach(function (audiobook) {
+
+                deleteFile("./uploads/audiobooks/" + audiobook.coverId)
+                deleteFile("./uploads/audiobooks/" + audiobook.pdfId)
+
+                audiobook.remove();
+            });
+
+            res.send({ message: "All audiobooks have been deleted" });
+        })
+        .catch(function (error) {
+            console.log(error)
+            res.status(500).send();
+        });
 };
+
+function deleteFile(fullPath) {
+    fs.unlink(fullPath, (err) => {
+        if (err) {
+            console.error("Could not delete file " + fullPath + " : " + err);
+            return;
+        }
+    });
+}
