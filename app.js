@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 // dependencies
+const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -27,6 +28,7 @@ mongoose
   );
 
 // middlewares
+app.use(cors())
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
